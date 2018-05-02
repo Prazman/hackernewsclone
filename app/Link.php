@@ -1,11 +1,10 @@
 <?php
-use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model as Model;
 
 class Link extends Model
 {
-    //
+    protected $fillable = ['title', 'link','site_id'];
 }

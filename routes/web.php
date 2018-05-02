@@ -12,5 +12,10 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('list');
+});
+
+
+Route::get('/links/create', function () {
+    return view('links.create');
 });

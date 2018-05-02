@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Link as Links;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/links', function (Request $request) {
+	$links = Links::all();
+	return response()->json($links);
+});
+
+Route::post('/links/create', function (Request $request) {
+	$link = Links::create($request->all());
+	return response()->json('ok');
 });
