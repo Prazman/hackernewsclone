@@ -19,3 +19,7 @@ Route::get('/', function () {
 Route::get('/links/create', function () {
     return view('links.create');
 });
+
+Route::get('/comments/{link_id}/create', function ($link_id) {
+    return view('comments.create',['link_id'=>$link_id]);
+});

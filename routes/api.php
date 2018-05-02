@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use App\Link as Links;
+use App\Comment as Comments;
 
 
 /*
@@ -24,3 +25,16 @@ Route::post('/links/create', function (Request $request) {
 	$link = Links::create($request->all());
 	return response()->json('ok');
 });
+
+
+Route::post('/comments/create', function (Request $request) {
+	$link = Links::create($request->all());
+	return response()->json('ok');
+});
+
+Route::get('/comments/{link_id}/list', function ($link_id) {
+	$comments = Comments::where('link_id',$link_id)->get();
+	return response()->json($comments);
+});
+
+
