@@ -8,9 +8,9 @@ function fetchLinkList(callback) {
 function fetchCommentList(link_id, callback) {
     $.get('./api/comments/' + link_id + '/list', function(comments) {
 
-            callback(comments);
-        })
-    }
+        callback(comments);
+    })
+}
 
 function postLink(link_title, link_address, callback) {
     var data = {
@@ -34,63 +34,86 @@ function postComment(link_id, content, callback) {
     })
 }
 
- Vue.component('link-list', {
+function upVoteLink(link_id,callback) {
+	$.post('./api/links/' + link_id + '/upvote', function(link) {
+        callback(link)
+    })
+}
+Vue.component('link-list', {
 
-        template: '#link-list-template',
+    template: '#link-list-template',
 
-        data: () => ({
-            links: []
-        }),
+    data: () => ({
+        links: []
+    }),
 
-        mounted() {
-            this.getLinks();
-        },
+    mounted() {
+        this.getLinks();
+    },
 
-        methods: {
+    methods: {
 
-            getLinks() {
-            	var self = this
-            	fetchLinkList(function(links){
-            		self.links = links;
-            	})
-                
-            }
-        }
-    });
-
-    // Create new Vue instance and mount onto elmement with id app
-    var app = new Vue({
-        el: '#app'
-    });
-	
-
-
-    /*//get link list
-
-
-    function buildLinkRow(rowdata) {
-        var rowcontent = $('<tr id=' + rowdata.id + '><td><a href=' + rowdata.link + '>' + rowdata.title + '</a></td></tr>')
-        return rowcontent;
-    }
-
-    function buildCommentRow(commentdata){
-    	var commentrow = $('<tr id=' + commentdata.id + '><td><a href=' + commentdata.link + '>' + commentdata.title + '</a></td></tr>')
-    }
-
-
-        $(document).ready(function() {
-            fetchLinkList();
-            //handles create link form submission
-            $('#create_form').submit(function() {
-                var data = {
-                    title: $('#title').val(),
-                    link: $('#link').val()
-                }
-                console.log(data)
-
-                $.post('./api/links/create', data, function(e) {
-                    fetchLinkList();
-                })
-                return false
+        getLinks() {
+            var self = this
+            fetchLinkList(function(links) {
+                self.links = links;
             })
-        })*/
+
+        },
+        postLink() {
+            var self = this;
+            title = $('#link_title').val();
+            link = $('#link_address').val();
+            postLink(title, link, function(link) {
+                self.links.push(link)
+                $('#link_title').val("");
+                $('#link_address').val("");
+            })
+        },
+        upVoteLink(link){
+        	var self= this
+        	var oldlink = link;
+        	upVoteLink(link._id,function(link){
+        		//TODO: update upvoited item upvote count
+        	})
+
+        }
+    }
+});
+
+// Create new Vue instance and mount onto elmement with id app
+var app = new Vue({
+    el: '#app'
+});
+
+
+
+/*//get link list
+
+
+function buildLinkRow(rowdata) {
+    var rowcontent = $('<tr id=' + rowdata.id + '><td><a href=' + rowdata.link + '>' + rowdata.title + '</a></td></tr>')
+    return rowcontent;
+}
+
+function buildCommentRow(commentdata){
+	var commentrow = $('<tr id=' + commentdata.id + '><td><a href=' + commentdata.link + '>' + commentdata.title + '</a></td></tr>')
+}
+
+
+    $(document).ready(function() {
+        fetchLinkList();
+        //handles create link form submission
+        $('#create_form').submit(function() {
+            var data = {
+                title: $('#title').val(),
+                link: $('#link').val()
+            }
+            console.log(data)
+
+            $.post('./api/links/create', data, function(e) {
+                fetchLinkList();
+            })
+            return false
+        })
+    })*/

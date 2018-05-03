@@ -26,7 +26,7 @@ Route::post('/links/create', function (Request $request) {
 	return response()->json($link);
 });
 
-Route::post('/links/{link_id}}/upvote', function ($link_id) {
+Route::post('/links/{link_id}/upvote', function ($link_id) {
 	$link = Links::find($link_id);
 	$link->upvote_count++;
 	$link->save();

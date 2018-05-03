@@ -9,24 +9,23 @@
 </head>
 
 <body>
-    <form method="post" action="#" id="create_form">
-        <input type="text" id="title" name="title" placeholder="Enter title" \>
-        <input type="text" id="link" name="link" placeholder="Enter link" \>
-        <button type="submit">Ok
-        </button>
-    </form>
     <div id="app">
         <link-list />
     </div>
     <template id="link-list-template">
         <div>
+            <input placeholder="Title" id="link_title">
+            <input placeholder="Link" id="link_address">
+            <button v-on:click="postLink">Post Link</button>
             <ul>
-                <li v-for="link in links">
-                    <a href={{link.link}}> {{link.title}} </a>
+                <li v-for="link in links" >
+                    <button @click="upVoteLink(link)">Upvote</button><a :href=link.link> {{link.title}} </a>
+                    Score :{{ link.upvote_count}}
                 </li>
             </ul>
         </div>
     </template>
+
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://localhost/hackernews/public/js/list.js"></script>
