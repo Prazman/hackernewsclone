@@ -29,7 +29,7 @@ function postComment(link_id, content, callback) {
         content: content
     }
 
-    $.post('./api/links/create', data, function(comment) {
+    $.post('./api/comments/create', data, function(comment) {
         callback(comment)
     })
 }
@@ -60,6 +60,15 @@ Vue.component('link-list', {
             })
 
         },
+        getComments(index){
+        	var self = this;
+        	var link = self.links[index]
+        	fetchCommentList(link._id,function(comments){
+        		link.comments = comments
+        		Vue.set(self.links, index, link)
+        	})
+
+        },
         postLink() {
             var self = this;
             title = $('#link_title').val();
@@ -70,11 +79,23 @@ Vue.component('link-list', {
                 $('#link_address').val("");
             })
         },
-        upVoteLink(link){
+        postComment(index){
+        	var self = this;
+        	var link = self.links[index]
+        	postComment(link._id,self.comment_content,function(comment){
+        		link.comments.push(comment);
+        		Vue.set(self.links, index, link)
+        		self.comment_content = "";
+        	})
+        },
+        upVoteLink(index){
         	var self= this
-        	var oldlink = link;
+        	var link = self.links[index]
         	upVoteLink(link._id,function(link){
-        		//TODO: update upvoited item upvote count
+        		Vue.set(self.links, index, link)
+        		self.links.sort(function(a,b){
+        			return a.upvote_count<b.upvote_count
+        		})
         	})
 
         }
