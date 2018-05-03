@@ -17,19 +17,25 @@ use App\Comment as Comments;
 */
 
 Route::get('/links', function (Request $request) {
-	$links = Links::all();
+	$links = Links::orderBy('upvote_count', 'desc')->get();
 	return response()->json($links);
 });
 
 Route::post('/links/create', function (Request $request) {
 	$link = Links::create($request->all());
-	return response()->json('ok');
+	return response()->json($link);
 });
 
+Route::post('/links/{link_id}}/upvote', function ($link_id) {
+	$link = Links::find($link_id);
+	$link->upvote_count++;
+	$link->save();
+	return response()->json($link);
+});
 
 Route::post('/comments/create', function (Request $request) {
-	$link = Links::create($request->all());
-	return response()->json('ok');
+	$comment = Comments::create($request->all());
+	return response()->json($comment);
 });
 
 Route::get('/comments/{link_id}/list', function ($link_id) {
