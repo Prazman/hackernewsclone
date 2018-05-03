@@ -1,17 +1,23 @@
+/*
+Fetch the list of all links
+*/
 function fetchLinkList(callback) {
     $.get('./api/links/', function(links) {
 
         callback(links)
     })
 }
-
+/*
+Fetch the list a comment attached to on link*/
 function fetchCommentList(link_id, callback) {
     $.get('./api/comments/' + link_id + '/list', function(comments) {
 
         callback(comments);
     })
 }
-
+/*
+Post a new link
+*/
 function postLink(link_title, link_address, callback) {
     var data = {
         title: link_title,
@@ -22,7 +28,9 @@ function postLink(link_title, link_address, callback) {
         callback(link)
     })
 }
-
+/*
+Post a new comment on a link
+*/
 function postComment(link_id, content, callback) {
     var data = {
         link_id: link_id,
@@ -33,12 +41,17 @@ function postComment(link_id, content, callback) {
         callback(comment)
     })
 }
-
-function upVoteLink(link_id,callback) {
-	$.post('./api/links/' + link_id + '/upvote', function(link) {
+/*
+Upvote a link
+*/
+function upVoteLink(link_id, callback) {
+    $.post('./api/links/' + link_id + '/upvote', function(link) {
         callback(link)
     })
 }
+/*
+Our view component that renders the whole link list with comments
+*/
 Vue.component('link-list', {
 
     template: '#link-list-template',
@@ -52,7 +65,9 @@ Vue.component('link-list', {
     },
 
     methods: {
-
+    	/*
+			Handles link list rendering
+    	*/
         getLinks() {
             var self = this
             fetchLinkList(function(links) {
@@ -60,15 +75,22 @@ Vue.component('link-list', {
             })
 
         },
-        getComments(index){
-        	var self = this;
-        	var link = self.links[index]
-        	fetchCommentList(link._id,function(comments){
-        		link.comments = comments
-        		Vue.set(self.links, index, link)
-        	})
+        /*
+			Handles comment list rendering for one link
+    	*/
+        getComments(index) {
+            var self = this;
+            var link = self.links[index]
+            fetchCommentList(link._id, function(comments) {
+                link.comments = comments
+                //update using view set to update view
+                Vue.set(self.links, index, link)
+            })
 
         },
+        /*
+			Handles link posting
+    	*/
         postLink() {
             var self = this;
             title = $('#link_title').val();
@@ -79,24 +101,30 @@ Vue.component('link-list', {
                 $('#link_address').val("");
             })
         },
-        postComment(index){
-        	var self = this;
-        	var link = self.links[index]
-        	postComment(link._id,self.comment_content,function(comment){
-        		link.comments.push(comment);
-        		Vue.set(self.links, index, link)
-        		self.comment_content = "";
-        	})
+        /*
+			Handles comment posting
+    	*/
+        postComment(index) {
+            var self = this;
+            var link = self.links[index]
+            postComment(link._id, self.comment_content, function(comment) {
+                link.comments.push(comment);
+                Vue.set(self.links, index, link)
+                self.comment_content = "";
+            })
         },
-        upVoteLink(index){
-        	var self= this
-        	var link = self.links[index]
-        	upVoteLink(link._id,function(link){
-        		Vue.set(self.links, index, link)
-        		self.links.sort(function(a,b){
-        			return a.upvote_count<b.upvote_count
-        		})
-        	})
+        /*
+			Handles link upvoting
+    	*/
+        upVoteLink(index) {
+            var self = this
+            var link = self.links[index]
+            upVoteLink(link._id, function(link) {
+                Vue.set(self.links, index, link)
+                self.links.sort(function(a, b) {
+                    return a.upvote_count < b.upvote_count
+                })
+            })
 
         }
     }
@@ -106,35 +134,3 @@ Vue.component('link-list', {
 var app = new Vue({
     el: '#app'
 });
-
-
-
-/*//get link list
-
-
-function buildLinkRow(rowdata) {
-    var rowcontent = $('<tr id=' + rowdata.id + '><td><a href=' + rowdata.link + '>' + rowdata.title + '</a></td></tr>')
-    return rowcontent;
-}
-
-function buildCommentRow(commentdata){
-	var commentrow = $('<tr id=' + commentdata.id + '><td><a href=' + commentdata.link + '>' + commentdata.title + '</a></td></tr>')
-}
-
-
-    $(document).ready(function() {
-        fetchLinkList();
-        //handles create link form submission
-        $('#create_form').submit(function() {
-            var data = {
-                title: $('#title').val(),
-                link: $('#link').val()
-            }
-            console.log(data)
-
-            $.post('./api/links/create', data, function(e) {
-                fetchLinkList();
-            })
-            return false
-        })
-    })*/

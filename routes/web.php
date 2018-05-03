@@ -12,14 +12,6 @@
 */
 
 Route::get('/', function () {
-    return view('list');
+    return \File::get(public_path() . '/app.html');
 });
 
-
-Route::get('/links/create', function () {
-    return view('links.create');
-});
-
-Route::get('/comments/{link_id}/create', function ($link_id) {
-    return view('comments.create',['link_id'=>$link_id]);
-});
