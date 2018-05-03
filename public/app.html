@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="{{ app()->getLocale() }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hackernews</title>
+</head>
+
+<body>
+    <form method="post" action="#" id="create_form">
+        <input type="text" id="title" name="title" placeholder="Enter title" \>
+        <input type="text" id="link" name="link" placeholder="Enter link" \>
+        <button type="submit">Ok
+        </button>
+    </form>
+    <div id="app">
+        <link-list />
+    </div>
+    <template id="link-list-template">
+        <div>
+            <ul>
+                <li v-for="link in links">
+                    <a href={{link.link}}> {{link.title}} </a>
+                </li>
+            </ul>
+        </div>
+    </template>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://localhost/hackernews/public/js/list.js"></script>
+</body>
+
+</html>
